@@ -17,11 +17,11 @@ public class GoToWebsite {
         Service acc3 = newAccount("duyhelloworld@mail.com", "120.03.2.103");
         acc3.login();
         
-        acc3.changeConnectionStatus(Login_Status.EXPIRED);
+        acc3.changeConnectionStatus(LoginStatus.EXPIRED);
         acc3.login();
         
         // But, when we unlock for acc 2, we must remove acc2 IP from blocked list
-        // acc2.changeConnectionStatus(Login_Status.SUCCESS);
+        // acc2.changeConnectionStatus(LoginStatus.SUCCESS);
         // acc2.login();
         // The result is IP blocked, acc2 cannot login
     }

@@ -9,11 +9,11 @@
 - In a Big Tech, Our system need to tracking user data when they access to our website. 
 - When a user login, we must write log, checking IP address, block if their access is unknown... If their account expired, we must send a notification to their mail, set status to EXPIRED in database.
 # UML 
-<!--![](/observer/observer_uml.png)-->
+![](/observer/observer_uml.png)
 
 # Code example
 ```java
-public enum Login_Status {
+public enum LoginStatus {
     SUCCESS, FAILURE, INVALID, EXPIRED
 }
 ```
@@ -22,7 +22,7 @@ public enum Login_Status {
 public class User {
     String email;
     String ip;
-    Login_Status status;
+    LoginStatus status;
     
     public User(String email, String ip) {
         this.email = email;
@@ -41,7 +41,7 @@ public interface Monitor {
 public class Logger implements Monitor {
     @Override
     public void update(User user) {
-        if (user.status == null || user.status != Login_Status.INVALID) {
+        if (user.status == null || user.status != LoginStatus.INVALID) {
             System.out.println("Wrote log for user : " + user.email + "\t" + user.ip);
         }
     } 
@@ -50,7 +50,7 @@ public class Logger implements Monitor {
 public class Mailer implements Monitor {
     @Override
     public void update(User user) {
-        if (user.status == Login_Status.EXPIRED) {
+        if (user.status == LoginStatus.EXPIRED) {
             System.out.println("Sent a mail to expired account : " + user.email);
         }
     }
@@ -59,7 +59,7 @@ public class Mailer implements Monitor {
 public class IpProctector implements Monitor {
     @Override
     public void update(User user) {
-        if (user.status == Login_Status.INVALID) {
+        if (user.status == LoginStatus.INVALID) {
             System.out.println("Account invalid, blocked " + user.ip);
         }
     }
@@ -111,7 +111,7 @@ public class Service implements Accessor {
         }
     }
     
-    public void changeConnectionStatus(Login_Status status) {
+    public void changeConnectionStatus(LoginStatus status) {
         System.out.println("\nChanged user status. " + user.status + " -> " + status);
         user.status = status;
         notifyToAllMonitor();
@@ -127,22 +127,22 @@ public class Service implements Accessor {
     }
 
     private boolean isExpiredAccount() {
-        return user.email.equalsIgnoreCase("expired@mail.com") || user.status == Login_Status.EXPIRED;
+        return user.email.equalsIgnoreCase("expired@mail.com") || user.status == LoginStatus.EXPIRED;
     }
 
     public void login() {
         if (isInvalidIP()) {
-            user.status = Login_Status.INVALID;
+            user.status = LoginStatus.INVALID;
         } else if (isExpiredAccount()) {
-            user.status = Login_Status.EXPIRED;
+            user.status = LoginStatus.EXPIRED;
         } else if (isValidEmail() && !isInvalidIP()) {
-            user.status = Login_Status.SUCCESS;
+            user.status = LoginStatus.SUCCESS;
         } else {
-            user.status = Login_Status.FAILURE;
+            user.status = LoginStatus.FAILURE;
         }
         notifyToAllMonitor();
 
-        if (user.status == Login_Status.SUCCESS && isValidEmail() && !isExpiredAccount() && !isInvalidIP()) {
+        if (user.status == LoginStatus.SUCCESS && isValidEmail() && !isExpiredAccount() && !isInvalidIP()) {
             System.out.println("Logged as " + user.email);
         }
     }
@@ -169,7 +169,7 @@ public class GoToWebsite {
         Service acc3 = newAccount("duyhelloworld@mail.com", "120.03.2.103");
         acc3.login();
         
-        acc3.changeConnectionStatus(Login_Status.EXPIRED);
+        acc3.changeConnectionStatus(LoginStatus.EXPIRED);
         acc3.login();
     }
 }
@@ -181,4 +181,5 @@ public class GoToWebsite {
 ## Where used it?
 - Broadcast-type communication, when need change a object which refer to change the same at other objects
 - JDK : mark interface `Observerable`, logic in many standard library.
-- MVC Pattern : used to prevent Model from View (through Controller)
+- MVC Pattern : used to prevent Model from View (through Controller). 
+- MVVM Pattern : used in Android mobile app development

@@ -35,7 +35,7 @@ public class Service implements Accessor {
         }
     }
     
-    public void changeConnectionStatus(Login_Status status) {
+    public void changeConnectionStatus(LoginStatus status) {
         System.out.println("\nChanged user status. " + user.status + " -> " + status);
         user.status = status;
         notifyToAllMonitor();
@@ -51,22 +51,22 @@ public class Service implements Accessor {
     }
 
     private boolean isExpiredAccount() {
-        return user.email.equalsIgnoreCase("expired@mail.com") || user.status == Login_Status.EXPIRED;
+        return user.email.equalsIgnoreCase("expired@mail.com") || user.status == LoginStatus.EXPIRED;
     }
 
     public void login() {
         if (isInvalidIP()) {
-            user.status = Login_Status.INVALID;
+            user.status = LoginStatus.INVALID;
         } else if (isExpiredAccount()) {
-            user.status = Login_Status.EXPIRED;
+            user.status = LoginStatus.EXPIRED;
         } else if (isValidEmail() && !isInvalidIP()) {
-            user.status = Login_Status.SUCCESS;
+            user.status = LoginStatus.SUCCESS;
         } else {
-            user.status = Login_Status.FAILURE;
+            user.status = LoginStatus.FAILURE;
         }
         notifyToAllMonitor();
 
-        if (user.status == Login_Status.SUCCESS && isValidEmail() && !isExpiredAccount() && !isInvalidIP()) {
+        if (user.status == LoginStatus.SUCCESS && isValidEmail() && !isExpiredAccount() && !isInvalidIP()) {
             System.out.println("Logged as " + user.email);
         }
     }

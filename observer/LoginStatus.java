@@ -1,3 +1,3 @@
-public enum Login_Status {
+public enum LoginStatus {
     SUCCESS, FAILURE, INVALID, EXPIRED
 }
